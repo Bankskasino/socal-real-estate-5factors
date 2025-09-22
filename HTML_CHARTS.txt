@@ -1,0 +1,390 @@
+import React, { useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ScatterChart, Scatter, Cell, PieChart, Pie, ComposedChart, Area, AreaChart } from 'recharts';
+
+const MacroFactorsVisualizer = () => {
+  const [activeTab, setActiveTab] = useState('insurance');
+
+  // Insurance Retreat Data
+  const insuranceRetreatData = [
+    { year: 2019, stateAvailable: 95, avgPremium: 1200, canceledPolicies: 12000 },
+    { year: 2020, stateAvailable: 92, avgPremium: 1350, canceledPolicies: 28000 },
+    { year: 2021, stateAvailable: 88, avgPremium: 1580, canceledPolicies: 45000 },
+    { year: 2022, stateAvailable: 82, avgPremium: 1890, canceledPolicies: 78000 },
+    { year: 2023, stateAvailable: 75, avgPremium: 2250, canceledPolicies: 125000 },
+    { year: 2024, stateAvailable: 68, avgPremium: 2810, canceledPolicies: 185000 }
+  ];
+
+  // Regional Insurance Impact
+  const regionalInsuranceData = [
+    { region: 'Malibu/PCH', availabilityChange: -45, premiumIncrease: 85, marketImpact: -18 },
+    { region: 'Santa Barbara Hills', availabilityChange: -38, premiumIncrease: 72, marketImpact: -15 },
+    { region: 'Orange County Hills', availabilityChange: -25, premiumIncrease: 45, marketImpact: -8 },
+    { region: 'San Fernando Valley', availabilityChange: -15, premiumIncrease: 28, marketImpact: -4 },
+    { region: 'Coastal Plains', availabilityChange: -8, premiumIncrease: 15, marketImpact: -1 }
+  ];
+
+  // ADU Revolution Data
+  const aduRevolutionData = [
+    { year: 2017, permits: 1200, estimatedUnits: 800, incomeGenerated: 24000000 },
+    { year: 2018, permits: 2100, estimatedUnits: 1400, incomeGenerated: 42000000 },
+    { year: 2019, permits: 3800, estimatedUnits: 2500, incomeGenerated: 75000000 },
+    { year: 2020, permits: 5200, estimatedUnits: 3400, incomeGenerated: 102000000 },
+    { year: 2021, permits: 8900, estimatedUnits: 5800, incomeGenerated: 174000000 },
+    { year: 2022, permits: 14500, estimatedUnits: 9500, incomeGenerated: 285000000 },
+    { year: 2023, permits: 22000, estimatedUnits: 14500, incomeGenerated: 435000000 },
+    { year: 2024, permits: 28500, estimatedUnits: 18800, incomeGenerated: 564000000 }
+  ];
+
+  // Broadband Infrastructure Impact
+  const broadbandImpactData = [
+    { community: 'Tehachapi', investment: 12500000, speedBefore: 25, speedAfter: 1000, valueIncrease: 18.5, population: 14414 },
+    { community: 'Twentynine Palms', investment: 8900000, speedBefore: 15, speedAfter: 500, valueIncrease: 22.3, population: 25759 },
+    { community: 'Ridgecrest', investment: 15200000, speedBefore: 50, speedAfter: 1000, valueIncrease: 15.8, population: 29457 },
+    { community: 'Barstow', investment: 18700000, speedBefore: 35, speedAfter: 1000, valueIncrease: 19.7, population: 25415 },
+    { community: 'Victorville', investment: 32400000, speedBefore: 100, speedAfter: 1000, valueIncrease: 12.4, population: 134810 }
+  ];
+
+  // Land Subsidence Data
+  const subsidenceData = [
+    { region: 'Fresno County', subsidenceRate: 8.2, valueDecline: -5.8, affectedHomes: 45000, totalLoss: 425000000 },
+    { region: 'Tulare County', subsidenceRate: 6.7, valueDecline: -4.2, affectedHomes: 32000, totalLoss: 285000000 },
+    { region: 'Kern County', subsidenceRate: 7.8, valueDecline: -5.1, affectedHomes: 28000, totalLoss: 320000000 },
+    { region: 'Kings County', subsidenceRate: 9.1, valueDecline: -6.2, affectedHomes: 18000, totalLoss: 195000000 },
+    { region: 'Madera County', subsidenceRate: 5.4, valueDecline: -3.8, affectedHomes: 22000, totalLoss: 145000000 },
+    { region: 'Merced County', subsidenceRate: 4.9, valueDecline: -3.2, affectedHomes: 25000, totalLoss: 125000000 },
+    { region: 'San Joaquin County', subsidenceRate: 3.8, valueDecline: -2.1, affectedHomes: 35000, totalLoss: 175000000 }
+  ];
+
+  // Foreign Investment Data
+  const foreignInvestmentData = [
+    { year: 2018, chineseInvestment: 8200000000, totalForeign: 15600000000, marketShare: 52.6, avgPrice: 2850000 },
+    { year: 2019, chineseInvestment: 11400000000, totalForeign: 18900000000, marketShare: 60.3, avgPrice: 3150000 },
+    { year: 2020, chineseInvestment: 6800000000, totalForeign: 12400000000, marketShare: 54.8, avgPrice: 2650000 },
+    { year: 2021, chineseInvestment: 9600000000, totalForeign: 16800000000, marketShare: 57.1, avgPrice: 3250000 },
+    { year: 2022, chineseInvestment: 13400000000, totalForeign: 21200000000, marketShare: 63.2, avgPrice: 3850000 },
+    { year: 2023, chineseInvestment: 15800000000, totalForeign: 24600000000, marketShare: 64.2, avgPrice: 4200000 },
+    { year: 2024, chineseInvestment: 18200000000, totalForeign: 27900000000, marketShare: 65.2, avgPrice: 4650000 }
+  ];
+
+  // Investment by Property Type
+  const investmentByTypeData = [
+    { type: 'Luxury Homes ($5M+)', chineseShare: 72, amount: 6800000000, color: '#dc2626' },
+    { type: 'High-End Condos', chineseShare: 58, amount: 4200000000, color: '#ea580c' },
+    { type: 'Commercial Properties', chineseShare: 45, amount: 3800000000, color: '#d97706' },
+    { type: 'Development Land', chineseShare: 38, amount: 2100000000, color: '#65a30d' },
+    { type: 'Investment Properties', chineseShare: 42, amount: 1300000000, color: '#059669' }
+  ];
+
+  const TabButton = ({ id, label, active, onClick }) => (
+    <button
+      onClick={() => onClick(id)}
+      className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
+        active
+          ? 'bg-red-600 text-white border-b-2 border-red-600'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      }`}
+    >
+      {label}
+    </button>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'insurance':
+        return (
+          <div>
+            <h3 className="text-xl font-bold mb-4">The "Insurance Retreat" Crisis</h3>
+            <p className="text-gray-600 mb-6">Major insurers pulling out of California due to wildfire risks</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div>
+                <h4 className="font-semibold mb-3">State Farm Availability & Premium Trends</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                  <ComposedChart data={insuranceRetreatData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis yAxisId="left" tickFormatter={(value) => `${value}%`} />
+                    <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `$${value}`} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="stateAvailable" fill="#ef4444" name="Availability %" />
+                    <Line yAxisId="right" type="monotone" dataKey="avgPremium" stroke="#1e40af" strokeWidth={3} name="Avg Premium $" />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Regional Impact on Property Values</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={regionalInsuranceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="region" angle={-45} textAnchor="end" height={80} />
+                    <YAxis tickFormatter={(value) => `${value}%`} />
+                    <Tooltip formatter={(value) => `${value}%`} />
+                    <Bar dataKey="marketImpact" fill="#dc2626" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="p-4 bg-red-50 rounded">
+              <p className="text-sm"><strong>Crisis Impact:</strong> State Farm stopped new policies in California. 25% average premium increases. High-risk areas seeing 18% property value declines due to insurance unavailability.</p>
+            </div>
+          </div>
+        );
+
+      case 'adu':
+        return (
+          <div>
+            <h3 className="text-xl font-bold mb-4">The ADU Revolution</h3>
+            <p className="text-gray-600 mb-6">California's streamlined ADU approval creating massive housing supply</p>
+            <ResponsiveContainer width="100%" height={400}>
+              <ComposedChart data={aduRevolutionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="year" />
+                <YAxis yAxisId="left" tickFormatter={(value) => `${(value/1000).toFixed(0)}K`} />
+                <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `$${(value/1000000).toFixed(0)}M`} />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="permits" fill="#3b82f6" name="Permits Issued" />
+                <Line yAxisId="right" type="monotone" dataKey="incomeGenerated" stroke="#059669" strokeWidth={3} name="Annual Income Generated" />
+              </ComposedChart>
+            </ResponsiveContainer>
+            <div className="grid grid-cols-3 gap-4 mt-6">
+              <div className="bg-blue-50 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-blue-600">28,500</div>
+                <div className="text-sm text-blue-800">ADU Permits (2024)</div>
+              </div>
+              <div className="bg-green-50 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-green-600">$564M</div>
+                <div className="text-sm text-green-800">Annual Income Generated</div>
+              </div>
+              <div className="bg-purple-50 p-4 rounded text-center">
+                <div className="text-2xl font-bold text-purple-600">18,800</div>
+                <div className="text-sm text-purple-800">New Housing Units</div>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-green-50 rounded">
+              <p className="text-sm"><strong>Game Changer:</strong> ADU streamlining created 18,800 new units in 2024 alone, generating $564M in annual rental income for homeowners while adding crucial housing supply.</p>
+            </div>
+          </div>
+        );
+
+      case 'broadband':
+        return (
+          <div>
+            <h3 className="text-xl font-bold mb-4">Broadband Infrastructure Transformation</h3>
+            <p className="text-gray-600 mb-6">$1.86B federal investment making rural areas viable for remote work</p>
+            <ResponsiveContainer width="100%" height={400}>
+              <ScatterChart data={broadbandImpactData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="investment" tickFormatter={(value) => `$${(value/1000000).toFixed(0)}M`} name="Investment" />
+                <YAxis dataKey="valueIncrease" tickFormatter={(value) => `${value}%`} name="Value Increase" />
+                <Tooltip formatter={(value, name) => [
+                  name === 'valueIncrease' ? `${value}%` : `$${(value/1000000).toFixed(1)}M`,
+                  name === 'valueIncrease' ? 'Property Value Increase' : 'Broadband Investment'
+                ]} />
+                <Scatter dataKey="valueIncrease" fill="#8b5cf6" />
+              </ScatterChart>
+            </ResponsiveContainer>
+            <div className="grid grid-cols-5 gap-2 mt-4">
+              {broadbandImpactData.map((community, index) => (
+                <div key={index} className="p-3 bg-purple-50 rounded text-center">
+                  <div className="font-medium text-sm">{community.community}</div>
+                  <div className="text-xs text-gray-600">${(community.investment/1000000).toFixed(1)}M invested</div>
+                  <div className="text-xs font-semibold text-purple-600">{community.valueIncrease}% increase</div>
+                  <div className="text-xs">{community.speedBefore} → {community.speedAfter} Mbps</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 p-4 bg-purple-50 rounded">
+              <p className="text-sm"><strong>Rural Renaissance:</strong> Federal broadband investments are creating 15-22% property value increases in previously "off the grid" communities as remote work becomes viable.</p>
+            </div>
+          </div>
+        );
+
+      case 'subsidence':
+        return (
+          <div>
+            <h3 className="text-xl font-bold mb-4">Land Subsidence Crisis</h3>
+            <p className="text-gray-600 mb-6">Central Valley ground sinking causing $1.87B in property losses</p>
+            <ResponsiveContainer width="100%" height={400}>
+              <ComposedChart data={subsidenceData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="region" angle={-45} textAnchor="end" height={100} />
+                <YAxis yAxisId="left" tickFormatter={(value) => `${value}%`} />
+                <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `$${(value/1000000).toFixed(0)}M`} />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="valueDecline" fill="#ef4444" name="Value Decline %" />
+                <Line yAxisId="right" type="monotone" dataKey="totalLoss" stroke="#7c2d12" strokeWidth={3} name="Total Loss $M" />
+              </ComposedChart>
+            </ResponsiveContainer>
+            <div className="grid grid-cols-4 gap-3 mt-6">
+              <div className="bg-red-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-red-600">$1.87B</div>
+                <div className="text-xs text-red-800">Total Property Losses</div>
+              </div>
+              <div className="bg-orange-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-orange-600">205K</div>
+                <div className="text-xs text-orange-800">Homes Affected</div>
+              </div>
+              <div className="bg-yellow-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-yellow-600">9.1"</div>
+                <div className="text-xs text-yellow-800">Max Annual Sinking</div>
+              </div>
+              <div className="bg-red-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-red-600">-6.2%</div>
+                <div className="text-xs text-red-800">Max Value Decline</div>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-red-50 rounded">
+              <p className="text-sm"><strong>Hidden Crisis:</strong> Groundwater over-pumping causing 3-9 inches of annual ground sinking in Central Valley, creating $1.87B in property value destruction across 205,000 homes.</p>
+            </div>
+          </div>
+        );
+
+      case 'foreign':
+        return (
+          <div>
+            <h3 className="text-xl font-bold mb-4">Foreign Investment Surge</h3>
+            <p className="text-gray-600 mb-6">Chinese buyers investing $18.2B, representing 65% of foreign investment</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div>
+                <h4 className="font-semibold mb-3">Investment Trends Over Time</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={foreignInvestmentData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis tickFormatter={(value) => `$${(value/1000000000).toFixed(0)}B`} />
+                    <Tooltip formatter={(value) => `$${(value/1000000000).toFixed(1)}B`} />
+                    <Legend />
+                    <Area type="monotone" dataKey="totalForeign" stackId="1" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} name="Total Foreign Investment" />
+                    <Area type="monotone" dataKey="chineseInvestment" stackId="2" stroke="#dc2626" fill="#dc2626" fillOpacity={0.7} name="Chinese Investment" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Investment by Property Type (2024)</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={investmentByTypeData}
+                      dataKey="amount"
+                      nameKey="type"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      label={(entry) => `${entry.type}: ${entry.chineseShare}%`}
+                    >
+                      {investmentByTypeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `$${(value/1000000000).toFixed(1)}B`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-3 mt-4">
+              <div className="bg-red-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-red-600">$18.2B</div>
+                <div className="text-xs text-red-800">Chinese Investment (2024)</div>
+              </div>
+              <div className="bg-blue-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-blue-600">65.2%</div>
+                <div className="text-xs text-blue-800">Foreign Market Share</div>
+              </div>
+              <div className="bg-green-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-green-600">$4.65M</div>
+                <div className="text-xs text-green-800">Avg Purchase Price</div>
+              </div>
+              <div className="bg-purple-50 p-3 rounded text-center">
+                <div className="text-lg font-bold text-purple-600">72%</div>
+                <div className="text-xs text-purple-800">Luxury Home Share</div>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-red-50 rounded">
+              <p className="text-sm"><strong>Market Driver:</strong> Chinese investors dominate luxury market with 72% share in $5M+ properties. Their $18.2B investment represents 36% of all Chinese real estate purchases nationwide, driving intense competition.</p>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Southern California Real Estate: Macro Market Forces</h1>
+        <p className="text-gray-600 text-lg">Major economic and policy trends reshaping property markets beyond traditional supply-demand dynamics</p>
+      </div>
+
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2 border-b">
+          <TabButton id="insurance" label="Insurance Crisis" active={activeTab === 'insurance'} onClick={setActiveTab} />
+          <TabButton id="adu" label="ADU Revolution" active={activeTab === 'adu'} onClick={setActiveTab} />
+          <TabButton id="broadband" label="Broadband Impact" active={activeTab === 'broadband'} onClick={setActiveTab} />
+          <TabButton id="subsidence" label="Land Subsidence" active={activeTab === 'subsidence'} onClick={setActiveTab} />
+          <TabButton id="foreign" label="Foreign Investment" active={activeTab === 'foreign'} onClick={setActiveTab} />
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        {renderContent()}
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg">
+          <h4 className="font-bold text-red-900 mb-2">$1.87B Crisis</h4>
+          <p className="text-sm text-red-800">Land subsidence destroying property values across Central Valley</p>
+        </div>
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+          <h4 className="font-bold text-blue-900 mb-2">564M Income</h4>
+          <p className="text-sm text-blue-800">ADU revolution generating massive rental income for homeowners</p>
+        </div>
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+          <h4 className="font-bold text-purple-900 mb-2">$1.86B Investment</h4>
+          <p className="text-sm text-purple-800">Federal broadband funding revitalizing rural communities</p>
+        </div>
+        <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg">
+          <h4 className="font-bold text-orange-900 mb-2">Insurance Exodus</h4>
+          <p className="text-sm text-orange-800">Major insurers fleeing California, creating regional disparities</p>
+        </div>
+        <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+          <h4 className="font-bold text-green-900 mb-2">$18.2B Foreign</h4>
+          <p className="text-sm text-green-800">Chinese investment driving luxury market competition</p>
+        </div>
+      </div>
+
+      <div className="mt-8 bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-lg">
+        <h3 className="text-xl font-bold mb-4">Combined Impact Analysis</h3>
+        <p className="text-gray-300 mb-4">
+          These five macro forces are creating unprecedented complexity in Southern California real estate markets. 
+          While foreign investment drives luxury prices higher, insurance retreat devastates high-risk areas. 
+          ADU income potential transforms property valuations, while broadband investments revitalize rural communities. 
+          Meanwhile, land subsidence quietly destroys billions in Central Valley property wealth.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div>
+            <div className="text-2xl font-bold text-red-400">$1.87B</div>
+            <div className="text-sm">Subsidence Losses</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-green-400">$18.2B</div>
+            <div className="text-sm">Foreign Investment</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-blue-400">$564M</div>
+            <div className="text-sm">ADU Income</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-purple-400">22%</div>
+            <div className="text-sm">Max Value Gain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MacroFactorsVisualizer;
